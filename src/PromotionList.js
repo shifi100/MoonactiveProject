@@ -6,14 +6,13 @@ import { Link } from 'react-router-dom';
 class PromotionList extends Component {
   
   pageNumber = 1;
+  lastScrollTop = 0;
   constructor(props) {
     super(props);
     this.state = {promotionsColumns: [], promotionsLines: [], isLoading: true};
     this.remove = this.remove.bind(this);
     this.create = this.create.bind(this);
     this.firstEvent = this.firstEvent.bind(this);
-    
-
   }
 
   componentDidMount() {
@@ -60,41 +59,34 @@ class PromotionList extends Component {
       .then(data => this.setState({promotionsLines: data}));
     });
   }
-  
-  
-  
 
   firstEvent(e) {
 		var bottom = e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight < 50;
 		if(bottom){
+        console.log("bottom");
         this.pageNumber = this.pageNumber+1;
         this.getPromotionLines();
-       
-         }
-         
-         
-         var lastScrollTop = 0;
-      var st = window.pageYOffset|| document.documentElement.scrollTop;
-      if (st < lastScrollTop){
-        console.log("up");
-     } else {
-        console.log("down");
-     }
-     lastScrollTop = st <= 0 ? 0 : st; 
-
-     
-     
-   
-      
+      }
+    var st = window.pageYOffset || e.target.scrollTop;
+    if (st < this.lastScrollTop){
+      console.log("up");
+      this.pageNumber = this.pageNumber-1;
+      this.getPromotionLines();
+    } else {
+      console.log("down");
+    }
+    this.lastScrollTop = st <= 0 ? 0 : st;   
   }
+
+
 
   async getPromotionLines(){
     await fetch(`api/promotions?page=${this.pageNumber}`)
     .then(response => response.json())
     .then(data => {
       if(this.pageNumber > 1) {
-        let arr = [...this.state.promotionsLines, ...data];
-        this.setState({promotionsLines: arr});
+        // let arr = [...data];
+        this.setState({promotionsLines: data});
 
       } else {
           this.setState({promotionsLines: data})
@@ -102,21 +94,20 @@ class PromotionList extends Component {
     });  
 }
   
-async generatePromotions(){
-  await fetch(`/api/generatePromotion`, {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-  }).then(async (data) => {
-    this.pageNumber = 1;
-    await fetch(`/api/promotions?page=1`)
-    .then(response => response.json())
-    .then(data => this.setState({promotionsLines: data}));
-  });
-}
-
+  async generatePromotions(){
+    await fetch(`/api/generatePromotion`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+    }).then(async (data) => {
+      this.pageNumber = 1;
+      await fetch(`/api/promotions?page=1`)
+      .then(response => response.json())
+      .then(data => this.setState({promotionsLines: data}));
+    });
+  }
 
   render() {
     const {promotionsColumns,promotionsLines, isLoading} = this.state;
@@ -127,7 +118,7 @@ async generatePromotions(){
     const promotionList = promotionsColumns;
 
     return (
-      <div className="promotionPage" >
+      <div >
         <AppNavbar/>
         <Container fluid>
           <div className="float-right">
@@ -161,7 +152,7 @@ async generatePromotions(){
                       <ButtonGroup>
                           <Button size="sm" color="primary" tag={Link} to={"/promotion/" + item["_id"]}>Edit</Button>
                           <Button size="sm" color="danger" onClick={() => this.create(item["_id"])}>Duplicate</Button>
-                          <Button size="sm" color="primary" onClick={() => this.remove(item["_id"])}>Delete</Button>
+                          <Button size="sm" color="danger" onClick={() => this.remove(item["_id"])}>Delete</Button>
                       </ButtonGroup>
                     </tr>
                   )}
