@@ -5,31 +5,21 @@ import { Link } from 'react-router-dom';
 export default class AppNavbar extends Component {
   constructor(props) {
     super(props);
-    this.state = {isOpen: false};
-    this.toggle = this.toggle.bind(this);
+    // this.state = {isOpen: false};
+    // this.toggle = this.toggle.bind(this);
   }
 
-  toggle() {
-    this.setState({
-      isOpen: !this.state.isOpen
-    });
-  }
+  // toggle() {
+  //   this.setState({
+  //     isOpen: !this.state.isOpen
+  //   });
+  // }
 
   render() {
-    return <Navbar color="dark" dark expand="md">
-      <NavbarBrand tag={Link} to="/">Home</NavbarBrand>
-      <NavbarToggler onClick={this.toggle}/>
-      <Collapse isOpen={this.state.isOpen} navbar>
-        <Nav className="ml-auto" navbar>
-          {/* <NavItem>
-            <NavLink
-              href="https://loizenai.com">loizenai.com</NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink href="https://github.com/loizenai">GitHub</NavLink>
-          </NavItem> */}
-        </Nav>
-      </Collapse>
+    return <Navbar className="header" >
+     
+      <h4 >Monetization </h4>
+     
     </Navbar>;
   }
 }

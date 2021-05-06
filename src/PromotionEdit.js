@@ -41,7 +41,19 @@
 
 
 //     // need to call update /api/promotion
-
+  
+//         await fetch(`/api/promotion`, {
+//           method: 'UPDATE',
+//           headers: {
+//             'Accept': 'application/json',
+//             'Content-Type': 'application/json'
+//           }
+//         }).then(() => {
+//           console.log("Update Done!");
+//           let updatedPromotions = [...this.state.promotionsLines].filter(i => i._id !== id);
+//           this.setState({promotionsLines: updatedPromotions});
+//         });
+     
 //     event.preventDefault();
 //     const {item} = this.state;
 
@@ -94,11 +106,11 @@
 //             <Label for="address">Address</Label>
 //             <Input type="text" name="address" id="address" value={item.address || ''}
 //                    onChange={this.handleChange} autoComplete="address"/>
-//           </FormGroup>
+//           </FormGroup> */}
 //           <FormGroup>
 //             <Button color="primary" type="submit">Save</Button>{' '}
 //             <Button color="secondary" tag={Link} to="/customers">Cancel</Button>
-//           </FormGroup> */}
+//           </FormGroup>
 //         </Form>
 //       </Container>
 //     </div>
