@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 class PromotionList extends Component {
 
   pageNumber = 1;
-  lastScrollTop = 0;
   totalPages = 0;
   constructor(props) {
     super(props);
@@ -15,14 +14,11 @@ class PromotionList extends Component {
     this.create = this.create.bind(this);
     this.firstEvent = this.firstEvent.bind(this);
   }
-
   componentDidMount() {
     this.setState({ isLoading: true });
-
     fetch('api/promotionsColumns')
       .then(response => response.json())
       .then(data => this.setState({ promotionsColumns: data, isLoading: false }));
-
     this.getPromotionLines();
   }
   async remove(id) {
@@ -61,23 +57,21 @@ class PromotionList extends Component {
   }
 
   firstEvent(e) {
-    var bottom = e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight < 50;
+    const bottom = e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight < 50;
+    //this if to handle when scrolling down,to load another promotions data
     if (bottom) {
       this.pageNumber = this.pageNumber + 1;
       if (this.pageNumber > this.totalPages)
         this.pageNumber = this.totalPages;
       this.getPromotionLines();
     }
-    var st = window.pageYOffset || e.target.scrollTop;
+    const st = window.pageYOffset || e.target.scrollTop
+    //this if to handle when scrolling top to load the previous promotions data;
     if (st == 0 && this.pageNumber > 1) {
       this.pageNumber = this.pageNumber - 1;
       this.getPromotionLines();
     }
-    this.lastScrollTop = st <= 0 ? 0 : st;
   }
-
-
-
   async getPromotionLines() {
     await fetch(`api/promotions?page=${this.pageNumber}`)
       .then(response => response.json())
@@ -149,7 +143,7 @@ class PromotionList extends Component {
                     })}
                     <ButtonGroup  >
                       <button onClick={() => this.create(item["_id"])}>Duplicate</button>
-                      <Button size="sm"  tag={Link} to={"/promotion/" + item["_id"]}>Edit</Button>
+                      <Button size="sm" tag={Link} to={"/promotion/" + item["_id"]}>Edit</Button>
                       <button onClick={() => this.remove(item["_id"])}>Delete</button>
                     </ButtonGroup>
                   </tr>
