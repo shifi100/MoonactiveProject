@@ -34,13 +34,13 @@ class PromotionList extends Component {
       }
     }).then(() => {
       console.log("Remove Done!");
-      let updatedPromotions = [...this.state.promotionsLines].filter(i => i._id !== id);
+      const updatedPromotions = [...this.state.promotionsLines].filter(i => i._id !== id);
       this.setState({ promotionsLines: updatedPromotions });
     });
   }
 
   async create(id) {
-    let promotion = [...this.state.promotionsLines].filter(i => i._id == id);
+    const promotion = [...this.state.promotionsLines].filter(i => i._id == id);
     delete promotion[0]._id
     const newPromtion = {
       promotionData: promotion[0]
@@ -62,14 +62,14 @@ class PromotionList extends Component {
 
   firstEvent(e) {
     var bottom = e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight < 50;
-    if (bottom&&this.pageNumber<this.totalPages) {
+    if (bottom) {
       this.pageNumber = this.pageNumber + 1;
-      // if (this.pageNumber > this.totalPages)
+      if (this.pageNumber > this.totalPages)
         this.pageNumber = this.totalPages;
       this.getPromotionLines();
     }
     var st = window.pageYOffset || e.target.scrollTop;
-    if (st == 0&&this.pageNumber>1) {
+    if (st == 0 && this.pageNumber > 1) {
       this.pageNumber = this.pageNumber - 1;
       this.getPromotionLines();
     }
@@ -84,7 +84,7 @@ class PromotionList extends Component {
       .then(data => {
         this.totalPages = data.totalPages;
         if (this.pageNumber > 1) {
-          let arr = [...data.promotionInfo];
+          const arr = [...data.promotionInfo];
           this.setState({ promotionsLines: arr });
         } else {
           this.setState({ promotionsLines: data.promotionInfo })
@@ -118,7 +118,7 @@ class PromotionList extends Component {
         <AppNavbar />
         <Container fluid>
           <div className="float-right">
-            <Button color="success" onClick={() => this.generatePromotions()}>Generate Promotions</Button>
+            <button className="but1" onClick={() => this.generatePromotions()}>Generate Promotions</button>
           </div>
           <h3>Promotions</h3>
           <div onScroll={this.firstEvent} className="promotionTable">
@@ -147,18 +147,21 @@ class PromotionList extends Component {
                         </td>
                       }
                     })}
-                    <ButtonGroup>
-                      <Button size="sm" color="danger" onClick={() => this.create(item["_id"])}>Duplicate</Button>
-                      <Button size="sm" color="primary" tag={Link} to={"/promotion/" + item["_id"]}>Edit</Button>
-                      <Button size="sm" color="danger" onClick={() => this.remove(item["_id"])}>Delete</Button>
+                    <ButtonGroup  >
+                      <button onClick={() => this.create(item["_id"])}>Duplicate</button>
+                      <Button size="sm"  tag={Link} to={"/promotion/" + item["_id"]}>Edit</Button>
+                      <button onClick={() => this.remove(item["_id"])}>Delete</button>
                     </ButtonGroup>
                   </tr>
                 )}
               </tbody>
             </Table>
+
           </div>
         </Container>
+
       </div>
+
     );
   }
 }
